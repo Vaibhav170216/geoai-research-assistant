@@ -6,10 +6,18 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "arxiv>=1.4.8",
+    "joblib>=1.5.3",
     "jupyter>=1.1.1",
+    "numpy>=2.2.6",
     "openai>=2.43.0",
     "python-dotenv>=1.2.2",
-    "requests>=2.34.2",
+    "requests",
+    "scikit-learn>=1.7.2",
+    "sentence-transformers>=5.6.0",
     "sqlitesearch>=0.1.1",
     "streamlit>=1.58.0",
+    "torch>=2.12.1",
 ]
+
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cpu"
