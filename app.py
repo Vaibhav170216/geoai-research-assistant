@@ -1,5 +1,7 @@
 from sqlitesearch import TextSearchIndex
 from rag_helper import RAGBase
+from hybrid_search import load_vector_index
+from sentence_transformers import SentenceTransformer
 from openai import OpenAI
 from dotenv import load_dotenv
 import streamlit as st
@@ -7,20 +9,31 @@ import os
 
 load_dotenv()
 
-st.set_page_config(page_title="FAQ RAG Helper", layout="wide")
+st.set_page_config(page_title="GeoAI Research Assistant", layout="wide")
 
 @st.cache_resource
 def load_assistant():
     index = TextSearchIndex(
-        text_fields=["title", "authors", "year", "url", "answer"],
+        text_fields=["title", "authors", "answer"],
         keyword_fields=["topic"],
         db_path="geoai.db"
     )
+
+    documents, embeddings = load_vector_index()
+
+    encoder = SentenceTransformer("all-MiniLM-L6-v2")
+
     client = OpenAI(
         api_key=os.getenv("GROQ_API_KEY"),
         base_url="https://api.groq.com/openai/v1"
     )
-    return RAGBase(index=index, llm_client=client)
+    return RAGBase(
+        index=index,
+        documents=documents,
+        embeddings=embeddings,
+        encoder=encoder,
+        llm_client=client
+    )
 
 assistant = load_assistant()
 
@@ -54,7 +67,7 @@ if query := st.chat_input("Ask a question..."):
     with st.chat_message("user"):
         st.write(query)
     with st.chat_message("assistant"):
-        with st.spinner("Searching..."):
+        with st.spinner("Searching papers..."):
             answer = assistant.rag(query)
         st.write(answer)
     st.session_state.messages.append({"role": "assistant", "content": answer})
