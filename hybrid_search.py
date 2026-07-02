@@ -1,9 +1,12 @@
+from pathlib import Path
 import numpy as np
 import pickle
 import os
 
+BASE_DIR = Path(__file__).resolve().parent
+
 MODEL_NAME = "all-MiniLM-L6-v2"
-EMBEDDINGS_PATH = "geoai_embeddings.pkl"
+EMBEDDINGS_PATH = BASE_DIR / "geoai_embeddings.pkl"
 
 
 def load_vector_index(load_path=EMBEDDINGS_PATH):

@@ -1,5 +1,4 @@
-from sentence_transformers import SentenceTransformer
-from hybrid_search import load_vector_index, vector_search, reciprocal_rank_fusion
+from hybrid_search import vector_search, reciprocal_rank_fusion
 
 
 INSTRUCTIONS = """
@@ -38,7 +37,7 @@ class RAGBase:
             llm_client,
             instructions = INSTRUCTIONS,
             prompt_template = PROMPT_TEMPLATE,
-            model = "qwen/qwen3-32b",
+            model = "llama-3.3-70b-versatile",
     ):
         self.index = index
         self.llm_client = llm_client
@@ -55,6 +54,8 @@ class RAGBase:
             query,
             num_results=num_results * 2,
             boost_dict={"title": 2.0, "topic": 1.0},
+            filter_dict={"topic": self.topic} if getattr(self, "topic", None) else None,
+
         )
 
         vector_results = vector_search(
@@ -88,6 +89,32 @@ class RAGBase:
 
         return "\n".join(lines).strip()
 
+
+    # def build_context(self, search_results):
+
+    #     lines = []
+
+    #     for doc in search_results:
+           
+    #         lines.append(f"Topic: {doc['topic']}")
+    #         lines.append(f"Title: {doc['title']}")
+
+    #         if "authors" in doc:
+    #             lines.append(f"Authors: {doc['authors']}")
+
+    #         if "year" in doc:
+    #             lines.append(f"Year: {doc['year']}")
+
+    #         answer_text = doc['answer']
+    #         if len(answer_text) > 500:
+    #             answer_text = answer_text[:500] + "..."
+            
+    #         lines.append(f"Answer: {answer_text}")
+    #         lines.append("")
+
+    #     return "\n".join(lines).strip()
+
+
     def build_prompt(self, query, search_results):
 
         context = self.build_context(search_results)
@@ -99,20 +126,25 @@ class RAGBase:
     def llm(self, prompt):
 
         input_messages = [
-            {"role": "developer", "content": self.instructions},
+            {"role": "system", "content": self.instructions},
             {"role": "user", "content": prompt}
         ]
 
-        response = self.llm_client.responses.create(
+        response = self.llm_client.chat.completions.create(
             model=self.model,
-            input=input_messages
+            messages=input_messages,
+            max_completion_tokens=4096
         )
 
-        return response.output_text
+        return response.choices[0].message.content
     
-    def rag(self, query):
+    def rag(self, query, return_context = False, num_results = 5):
 
-        search_results = self.search(query)
+        search_results = self.search(query, num_results = num_results)
         prompt = self.build_prompt(query, search_results)
         answer = self.llm(prompt)
+
+        if return_context:
+            return answer, search_results
+        
         return answer
