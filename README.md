@@ -1,168 +1,221 @@
-# GeoAI Research Assistant
+# 🌍 GeoAI Research Assistant
 
-An LLM-powered research assistant for exploring Earth Observation, Remote Sensing and GeoAI literature using retrieval-based question answering.
+<p align="center">
+  <img src="images/app.png" alt="GeoAI Research Assistant" width="1000"/>
+</p>
 
-The system indexes GeoAI research papers and enables natural-language querying over topics such as Land Use Land Cover (LULC) classification, Vision Transformers and Foundation Models.
+<p align="center">
+An end-to-end <b>Retrieval-Augmented Generation (RAG)</b> system for exploring <b>GeoAI</b>, <b>Earth Observation</b> and <b>Remote Sensing</b> research papers using hybrid retrieval and Large Language Models.
+</p>
 
----
+<p align="center">
 
-## Overview
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
+![RAG](https://img.shields.io/badge/RAG-Hybrid-green)
+![SQLite](https://img.shields.io/badge/SQLite-FTS-blue)
+![SentenceTransformers](https://img.shields.io/badge/SentenceTransformers-Embeddings-orange)
+![Evaluation](https://img.shields.io/badge/RAGAS-Evaluated-success)
 
-GeoAI Research Assistant helps researchers, students and practitioners quickly explore scientific literature without manually searching through hundreds of papers.
-
-The application retrieves relevant research papers using SQLite Full-Text Search (FTS) and uses a Large Language Model (LLM) to generate grounded answers from the retrieved context.
-
----
-
-## Features
-
-- Research paper search using SQLite Full-Text Search
-- LLM-powered question answering
-- Retrieval-based context grounding
-- Streamlit web interface
-- Topic-based filtering
-- Persistent local knowledge base
-- Modular retrieval pipeline
+</p>
 
 ---
 
-## Research Topics Covered
+# 📖 Overview
+
+GeoAI Research Assistant helps researchers, students and practitioners efficiently explore scientific literature without manually searching through hundreds of papers.
+
+The system combines traditional information retrieval with semantic search and Large Language Models to generate grounded, context-aware answers from GeoAI research papers.
+
+---
+
+# ✨ Features
+
+-  Hybrid Retrieval (SQLite FTS + Semantic Search)
+-  Context Grounded Responses
+-  Reciprocal Rank Fusion (RRF)
+-  Topic-based Filtering
+-  Interactive Streamlit Interface
+-  Automated RAG Evaluation using RAGAS
+
+---
+
+# 📚 Research Topics
 
 - GeoAI
 - Earth Observation
 - Remote Sensing
-- Land Use Land Cover (LULC) Classification
+- Foundation Models
 - Vision Transformers
-- Foundation Models for Earth Observation
+- Self-Supervised Learning
+- Sentinel-2
+- Satellite Imagery
+- Land Use Land Cover (LULC) Classification
 - Change Detection
-- Semantic Segmentation
-- Deep Learning for Geospatial Analysis
 
 ---
 
-## System Architecture
+# 🏗️ System Architecture
 
 ```text
-User Question
-      │
-      ▼
+User Query
+     │
+     ▼
 SQLite Full-Text Search
-      │
-      ▼
-Top-K Relevant Papers
-      │
-      ▼
-Context Construction
-      │
-      ▼
-Large Language Model
-      │
-      ▼
-Generated Answer
+     │
+     ▼
+Semantic Vector Search
+     │
+     ▼
+Reciprocal Rank Fusion
+     │
+     ▼
+Top-k Research Papers
+     │
+     ▼
+Prompt Construction
+     │
+     ▼
+Llama 3.3 70B (Groq)
+     │
+     ▼
+Grounded Answer
 ```
 
 ---
 
-## Example Questions
+# 💻 Application
+
+Example Questions
 
 ```text
-How are Vision Transformers used for remote sensing?
-
-What foundation models exist for Earth Observation?
-
-What are the advantages of Sentinel-2 imagery?
+How are Vision Transformers used in Remote Sensing?
 
 Compare CNNs and Vision Transformers for LULC classification.
 
-How is change detection performed using deep learning?
+What are Foundation Models for Earth Observation?
+
+Explain Self-Supervised Learning in GeoAI.
+
+What are recent trends in Change Detection?
 ```
 
 ---
 
-## Tech Stack
+# ⚙️ Tech Stack
 
-### AI & LLM
+## LLM
 
-- OpenAI API
-- Prompt Engineering
+- Groq API
+- Llama-3.3-70B-versatile for the final grounded answers
+- all-MiniLM-L6-v2 for vector search embeddings
 
-### Retrieval
+## Retrieval
 
-- SQLite
-- SQLite Full-Text Search (FTS)
+- SQLite FTS5 (Full Text Search)
+- Sentence Transformers
+- Hybrid Search
+- Reciprocal Rank Fusion (RRF)
 
-### Backend
-
-- Python
-
-### Frontend
+## Frameworks
 
 - Streamlit
+- Python
 
+## Evaluation
+
+- Ragas
+- Llama-3.1-8B-instant (LLM Judge)
 
 ---
 
-## Dataset
+# 📂 Dataset
 
-The knowledge base consists of research papers related to:
+The knowledge base consists of automatically collected GeoAI research papers.
 
-- Earth Observation
-- GeoAI
-- Remote Sensing
-- Satellite Image Analysis
-- Foundation Models
-- Deep Learning Applications
-
-Each paper contains:
+Each document contains:
 
 - Title
 - Abstract
 - Authors
 - Publication Year
-- Topic Category
+- Topic
+- Source URL
 
 ---
 
-## Future Improvements
+# 📊 Evaluation Pipeline
 
-- Vector Search
-- Hybrid Retrieval (FTS + Semantic Search)
-- Paper recommendations
-- Research trend analysis
-- Multi-document summarization
+```text
+Research Papers
+       │
+       ▼
+Automatic Question Generation
+       │
+       ▼
+questions.json
+       │
+       ▼
+Run RAG Pipeline
+       │
+       ▼
+rag_outputs.json
+       │
+       ▼
+Ragas Evaluation
+       │
+       ▼
+Evaluation Metrics
+```
+
+The evaluation pipeline automatically:
+
+- Generates evaluation questions from the indexed papers.
+- Runs the complete RAG pipeline.
+- Evaluates generated answers using Ragas.
+- Produces quantitative evaluation reports.
 
 ---
 
-## Skills Demonstrated
+# 📈 Evaluation Results
 
-This project demonstrates:
+| Metric | Score |
+|---------|------:|
+| Faithfulness | **0.7386** |
+| Answer Relevancy | **0.8267** |
+| Context Precision | **0.8600** |
 
-- Retrieval-Augmented Generation (RAG) concepts
-- Information Retrieval
-- LLM Application Development
-- Prompt Engineering
-- Research Knowledge Base Construction
-- Streamlit Deployment
-- End-to-End GenAI Workflows
+### Interpretation
+
+- ✅ Responses remain well grounded in retrieved literature.
+- ✅ High answer relevancy indicates the assistant answers user questions effectively.
+- ✅ Hybrid retrieval consistently retrieves relevant scientific papers.
 
 ---
 
-## Running Locally
+# 🚀 Running Locally
 
-### Clone Repository
+Clone the repository
 
 ```bash
 git clone https://github.com/Vaibhav170216/geoai-research-assistant.git
+
 cd geoai-research-assistant
 ```
 
-### Install Dependencies
+Install dependencies
 
 ```bash
 uv sync
 ```
 
-### Run Application
+Create a `.env`
+
+```text
+GROQ_API_KEY=your_groq_api_key
+```
+
+Run the application
 
 ```bash
 streamlit run app.py
@@ -170,12 +223,13 @@ streamlit run app.py
 
 ---
 
-## Motivation
+# 🔮 Future Improvements
 
-As part of my interest in GeoAI and Earth Observation, I built this project to explore how Large Language Models can be combined with retrieval systems to make scientific literature more accessible and searchable.
+- PDF Parsing Pipeline
+- Agentic Literature Review
 
 ---
 
-## Author
+# 👨‍💻 Author
 
 **Vaibhav Nagar**
