@@ -131,7 +131,7 @@ What are recent trends in Change Detection?
 
 # 📂 Dataset
 
-The knowledge base consists of automatically collected GeoAI research papers.
+The knowledge base was built by querying the [arXiv API](https://arxiv.org/help/api) across 13 topic-specific searches spanning GeoAI, Earth Observation, Remote Sensing, Vision Transformers and Foundation Models, sorted by most recent submission date. After collection, this indexes around **1,000 research papers**.
 
 Each document contains:
 
