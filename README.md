@@ -133,6 +133,15 @@ What are recent trends in Change Detection?
 
 The knowledge base was built by querying the [arXiv API](https://arxiv.org/help/api) across 13 topic-specific searches spanning GeoAI, Earth Observation, Remote Sensing, Vision Transformers and Foundation Models, sorted by most recent submission date. After collection, this indexes around **1,000 research papers**.
 
+### Indexing Pipeline
+
+The `build_index.py` script orchestrates the full ingestion-to-index flow:
+
+1. **Ingesting** - `ingest.py` queries the arXiv API across the 13 topic searches and returns paper metadata (title, abstract, authors, year, topic, URL).
+2. **Keyword index** - papers are added to a `TextSearchIndex` (SQLite FTS5), searchable on `title`, `authors` and `abstract`, with `topic` as a filterable keyword field. Saved to `geoai.db`.
+3. **Vector index** - `build_embeddings.py` encodes the same documents into sentence-transformer embeddings for semantic search. Saved to `geoai_embeddings.pkl`.
+
+
 Each document contains:
 
 - Title
@@ -213,6 +222,12 @@ Create a `.env`
 
 ```text
 GROQ_API_KEY=your_groq_api_key
+```
+
+Build the index
+
+```bash
+python build_index.py
 ```
 
 Run the application
