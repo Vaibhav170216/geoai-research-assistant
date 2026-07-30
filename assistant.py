@@ -1,5 +1,5 @@
 from sqlitesearch import TextSearchIndex
-from rag_helper import RAGBase
+from metrics import RAGWithMetrics
 from hybrid_search import load_vector_index
 from sentence_transformers import SentenceTransformer
 from openai import OpenAI
@@ -23,7 +23,7 @@ def load_assistant():
         api_key=os.getenv("GROQ_API_KEY"),
         base_url="https://api.groq.com/openai/v1"
     )
-    return RAGBase(
+    return RAGWithMetrics(
         index=index,
         documents=documents,
         embeddings=embeddings,
