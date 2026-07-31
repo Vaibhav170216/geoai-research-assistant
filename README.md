@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-An end-to-end <b>Retrieval-Augmented Generation (RAG)</b> system for exploring <b>GeoAI</b>, <b>Earth Observation</b> and <b>Remote Sensing</b> research papers using hybrid retrieval and Large Language Models.
+An end-to-end <b>Retrieval-Augmented Generation (RAG)</b> system for exploring <b>GeoAI</b>, <b>Earth Observation</b> and <b>Remote Sensing</b> research papers featuring hybrid retrieval, automated evaluation with <b>RAGAS</b>, <b>Dockerized</b> deployment, <b>PostgreSQL</b> request logging and <b>Grafana</b>-based monitoring.
 </p>
 
 <p align="center">
@@ -16,6 +16,9 @@ An end-to-end <b>Retrieval-Augmented Generation (RAG)</b> system for exploring <
 ![SQLite](https://img.shields.io/badge/SQLite-FTS-blue)
 ![SentenceTransformers](https://img.shields.io/badge/SentenceTransformers-Embeddings-orange)
 ![Evaluation](https://img.shields.io/badge/RAGAS-Evaluated-success)
+![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Monitoring-336791?logo=postgresql)
+![Grafana](https://img.shields.io/badge/Grafana-Dashboard-F46800?logo=grafana)
 
 </p>
 
@@ -37,6 +40,10 @@ The system combines traditional information retrieval with semantic search and L
 -  Topic-based Filtering
 -  Interactive Streamlit Interface
 -  Automated RAG Evaluation using RAGAS
+-  Dockerized Deployment
+-  PostgreSQL Request Logging
+-  Grafana Monitoring Dashboard
+-  End-to-End Containerized Architecture
 
 ---
 
@@ -58,28 +65,33 @@ The system combines traditional information retrieval with semantic search and L
 # 🏗️ System Architecture
 
 ```text
-User Query
-     │
-     ▼
-SQLite Full-Text Search
-     │
-     ▼
-Semantic Vector Search
-     │
-     ▼
-Reciprocal Rank Fusion
-     │
-     ▼
-Top-k Research Papers
-     │
-     ▼
-Prompt Construction
-     │
-     ▼
-Llama 3.3 70B (Groq)
-     │
-     ▼
-Grounded Answer
+                User
+                  │
+                  ▼
+          Streamlit Interface
+                  │
+                  ▼
+        Hybrid Retrieval Engine
+        ├──────────────┐
+        ▼              ▼
+ SQLite FTS5     Vector Search
+        │              │
+        └──────┬───────┘
+               ▼
+     Reciprocal Rank Fusion
+               ▼
+      Context Construction
+               ▼
+      Llama 3.3 70B (Groq)
+               ▼
+        Generated Response
+               │
+      ┌────────┴─────────┐
+      ▼                  ▼
+Streamlit UI      PostgreSQL Logging
+                         │
+                         ▼
+                   Grafana Dashboard
 ```
 
 ---
@@ -121,6 +133,12 @@ What are recent trends in Change Detection?
 
 - Streamlit
 - Python
+
+## Deployment & Monitoring
+
+- Docker
+- PostgreSQL
+- Grafana
 
 ## Evaluation
 
@@ -200,6 +218,28 @@ The evaluation pipeline automatically:
 - ✅ High answer relevancy indicates the assistant answers user questions effectively.
 - ✅ Hybrid retrieval consistently retrieves relevant scientific papers.
 
+# 📊 Monitoring Dashboard
+
+The application includes an end-to-end monitoring pipeline for tracking RAG usage and system behavior.
+
+Every user query is automatically logged to PostgreSQL, enabling real-time visualization through Grafana.
+
+### Logged Metrics
+
+- User queries
+- Retrieved document count
+- Response latency
+- Token usage
+- Timestamp
+- LLM model
+- Retrieval metadata
+
+This monitoring stack provides valuable insights into application usage, debugging and performance trends.
+
+<p align="center">
+  <img src="images/dashboard.png" width="1000"/>
+</p>
+
 ---
 
 # 🚀 Running Locally
@@ -235,6 +275,78 @@ Run the application
 ```bash
 streamlit run app.py
 ```
+
+Alternatively if you want to deplot whole application end-to-end then read the below instructions -
+
+# Dockerized Deployment
+
+## Prerequisites
+
+Before running the project, ensure you have the following installed:
+
+- Docker Desktop (with WSL2 enabled)
+- Git
+- Groq API Key
+
+---
+
+## Clone the Repository
+
+```bash
+git clone https://github.com/Vaibhav170216/geoai-research-assistant.git
+
+cd geoai-research-assistant
+```
+
+---
+
+## Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```text
+GROQ_API_KEY=your_groq_api_key
+```
+
+---
+
+## Build and Run
+
+Build the Docker images and start all services:
+
+```bash
+docker compose up --build
+```
+
+The first build may take several minutes as dependencies are downloaded.
+
+---
+
+## Available Services
+
+| Service | URL | Description |
+|----------|-----|-------------|
+| Streamlit App | http://localhost:8501 | GeoAI Research Assistant |
+| Grafana Dashboard | http://localhost:3000 | Monitoring Dashboard |
+| PostgreSQL | localhost:5432 | Request Logging Database |
+
+---
+
+## Stopping the Application
+
+Stop all running containers:
+
+```bash
+docker compose down
+```
+
+To remove containers, networks, and volumes:
+
+```bash
+docker compose down -v
+```
+
+> **Warning:** Using `docker compose down -v` permanently deletes the PostgreSQL database and Grafana data.
 
 ---
 
