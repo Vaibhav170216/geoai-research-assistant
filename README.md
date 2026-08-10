@@ -11,7 +11,8 @@ An end-to-end <b>Retrieval-Augmented Generation (RAG)</b> system for exploring <
 <p align="center">
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-009688)
+![React](https://img.shields.io/badge/React-Frontend-61DAFB)
 ![RAG](https://img.shields.io/badge/RAG-Hybrid-green)
 ![SQLite](https://img.shields.io/badge/SQLite-FTS-blue)
 ![SentenceTransformers](https://img.shields.io/badge/SentenceTransformers-Embeddings-orange)
@@ -38,7 +39,7 @@ The system combines traditional information retrieval with semantic search and L
 -  Context Grounded Responses
 -  Reciprocal Rank Fusion (RRF)
 -  Topic-based Filtering
--  Interactive Streamlit Interface
+-  React chat interface backed by FastAPI
 -  Automated RAG Evaluation using RAGAS
 -  Dockerized Deployment
 -  PostgreSQL Request Logging
@@ -68,7 +69,10 @@ The system combines traditional information retrieval with semantic search and L
                 User
                   │
                   ▼
-          Streamlit Interface
+          React Frontend
+                  │
+                  ▼
+             FastAPI Backend
                   │
                   ▼
         Hybrid Retrieval Engine
@@ -88,7 +92,7 @@ The system combines traditional information retrieval with semantic search and L
                │
       ┌────────┴─────────┐
       ▼                  ▼
-Streamlit UI      PostgreSQL Logging
+React UI          PostgreSQL Logging
                          │
                          ▼
                    Grafana Dashboard
@@ -131,7 +135,8 @@ What are recent trends in Change Detection?
 
 ## Frameworks
 
-- Streamlit
+- FastAPI
+- React + Vite
 - Python
 
 ## Deployment & Monitoring
@@ -270,13 +275,25 @@ Build the index
 python build_index.py
 ```
 
-Run the application
+Run the backend
 
 ```bash
-streamlit run app.py
+uv run uvicorn main:app --reload --port 8000
 ```
 
-Alternatively if you want to deplot whole application end-to-end then read the below instructions -
+In a second terminal, run the React frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open http://localhost:5173. The frontend proxies API calls to FastAPI on port 8000 during development. Set `VITE_API_URL` when the API is hosted on a different origin.
+
+The former Streamlit chat entrypoint has been removed; use the FastAPI and React commands above.
+
+Alternatively if you want to deploy whole application end-to-end then read the below instructions -
 
 # Dockerized Deployment
 
@@ -326,7 +343,8 @@ The first build may take several minutes as dependencies are downloaded.
 
 | Service | URL | Description |
 |----------|-----|-------------|
-| Streamlit App | http://localhost:8501 | GeoAI Research Assistant |
+| React App | http://localhost:8000 | GeoAI Research Assistant (Docker) |
+| FastAPI API | http://localhost:8000/docs | API documentation |
 | Grafana Dashboard | http://localhost:3000 | Monitoring Dashboard |
 | PostgreSQL | localhost:5432 | Request Logging Database |
 
