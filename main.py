@@ -60,8 +60,16 @@ app.add_middleware(
 
 @app.on_event("startup")
 def initialise_application():
-    """Fetch required search indexes and initialise optional monitoring."""
-    ensure_index_files()
+    """Fully initialise RAG before Render marks this instance as ready."""
+    print("Initialising the GeoAI RAG service...")
+    with assistant_lock:
+        # load_assistant downloads missing Hub artifacts, opens the SQLite index,
+        # loads the SentenceTransformer model, and constructs the LLM client.
+        # Allow failures to stop startup so health checks never route users to an
+        # instance that cannot answer a query.
+        get_assistant()
+    print("GeoAI RAG service is ready.")
+
     if os.getenv("DATABASE_URL"):
         try:
             init_db()

@@ -34,8 +34,19 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: text, topic }),
       })
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.detail || 'Unable to get an answer.')
+      const responseText = await response.text()
+      let data
+      try {
+        data = responseText ? JSON.parse(responseText) : null
+      } catch {
+        data = null
+      }
+      if (!response.ok) {
+        throw new Error(
+          data?.detail || `The research service is unavailable (HTTP ${response.status}). Please try again.`,
+        )
+      }
+      if (!data?.answer) throw new Error('The research service returned an invalid response. Please try again.')
       setMessages((current) => [...current, {
         role: 'assistant', content: data.answer, responseTime: data.response_time,
       }])
