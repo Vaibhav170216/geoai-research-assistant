@@ -1,6 +1,7 @@
 """FastAPI server for the GeoAI Research Assistant."""
 
 from functools import lru_cache
+import os
 from pathlib import Path
 from threading import Lock
 
@@ -9,7 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from assistant import load_assistant
+from assistant import ensure_index_files, load_assistant
+from db_init import init_db
 from db_save import save_conversation
 
 
@@ -54,6 +56,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+def initialise_application():
+    """Fetch required search indexes and initialise optional monitoring."""
+    ensure_index_files()
+    if os.getenv("DATABASE_URL"):
+        try:
+            init_db()
+        except Exception as exc:
+            print(f"Could not initialise monitoring database: {exc}")
 
 
 @app.get("/api/health")

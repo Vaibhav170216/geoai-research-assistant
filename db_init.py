@@ -7,6 +7,9 @@ DB_TIMEZONE = datetime.now().astimezone().tzinfo
 print(f"Using timezone: {DB_TIMEZONE}")
 
 def get_db_connection():
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        return psycopg.connect(database_url)
 
     return psycopg.connect(
         host=os.getenv("POSTGRES_HOST", "localhost"),
