@@ -1,18 +1,10 @@
----
-title: GeoAI Research Assistant
-emoji: 🌍
-colorFrom: orange
-colorTo: purple
-sdk: docker
-app_port: 7860
-fullWidth: true
-short_description: Research-paper question answering for GeoAI and Earth Observation.
----
-
 # 🌍 GeoAI Research Assistant
 
+**🚀 [Live App](https://geoai-research-assistant.onrender.com/)**
+
+
 <p align="center">
-  <img src="images/app.png" alt="GeoAI Research Assistant" width="1000"/>
+  <img src="images/app.gif" alt="GeoAI Research Assistant" width="1000"/>
 </p>
 
 <p align="center">
@@ -301,42 +293,6 @@ npm run dev
 ```
 
 Open http://localhost:5173. The frontend proxies API calls to FastAPI on port 8000 during development. Set `VITE_API_URL` when the API is hosted on a different origin.
-
-## Deploy on Render
-
-The repository includes `render.yaml` for a Docker-based Render web service.
-In the [Render Dashboard](https://dashboard.render.com/), select **New** →
-**Blueprint**, connect this repository, and create the detected service. Add
-`GROQ_API_KEY` and `HF_REPO_ID` (for example,
-`your-username/geoai-rag-index`) as environment variables, then deploy. The
-service downloads `geoai.db` and `geoai_embeddings.pkl` from that Hugging Face
-dataset repository at startup when they are not bundled locally. If the dataset
-repository is private, also add an `HF_TOKEN` secret with read access. The
-resulting `https://<service-name>.onrender.com` URL serves both the React app
-and API. Render marks the service healthy only after the RAG indexes and
-SentenceTransformer model have loaded.
-
-`DATABASE_URL` is optional. Set it to the Internal Database URL of a Render
-PostgreSQL instance if request logging is required.
-
-## Deploy on Hugging Face Spaces
-
-This repository is also configured as a Docker Space. Create a **Docker** Space
-at [Hugging Face Spaces](https://huggingface.co/new-space), then push this
-repository to the Space remote. The application listens on the Spaces-required
-port `7860` and serves the React frontend and FastAPI API from one URL.
-
-In the Space **Settings** page, add these secrets/variables:
-
-| Name | Type | Value |
-| --- | --- | --- |
-| `GROQ_API_KEY` | Secret | Your Groq API key |
-| `HF_REPO_ID` | Variable | Your index dataset, e.g. `your-name/geoai-rag-index` |
-| `HF_TOKEN` | Secret | Required only for a private index dataset; use a read token |
-| `HF_REVISION` | Variable | Optional dataset revision to pin |
-
-The Space downloads missing index files from `HF_REPO_ID` at startup. After the
-build succeeds, share the URL shown on the Space page.
 
 The former Streamlit chat entrypoint has been removed; use the FastAPI and React commands above.
 
