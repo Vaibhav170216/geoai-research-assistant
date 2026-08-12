@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: geoai-research-assistant
+    runtime: docker
+    healthCheckPath: /api/health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: HF_REPO_ID
+        sync: false
+      # Required only when the Hugging Face dataset repository is private.
+      - key: HF_TOKEN
+        sync: false
+      # Optional: pin a Hugging Face commit hash or tag for reproducible data.
+      - key: HF_REVISION
+        sync: false
+      # Optional: add a Render Postgres Internal Database URL for monitoring.
+      - key: DATABASE_URL
+        sync: false
