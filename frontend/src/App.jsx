@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 const API_BASE = import.meta.env.VITE_API_URL ?? ''
 
@@ -78,7 +80,7 @@ export default function App() {
       <header><div><p className="eyebrow">Literature exploration</p><h1>Ask about GeoAI research</h1></div><span className="status"><i /> Online</span></header>
       <div className="messages" aria-live="polite">
         {messages.length === 0 && <div className="welcome"><div className="welcome-icon">⌁</div><h2>Explore the research landscape</h2><p>Ask about remote sensing, foundation models, change detection, or another indexed topic.</p><div className="suggestions">{['How are Vision Transformers used in Remote Sensing?', 'What are Foundation Models for Earth Observation?', 'What are recent trends in Change Detection?'].map((item) => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</div></div>}
-        {messages.map((message, index) => <article key={index} className={`message ${message.role}`}><span className="avatar">{message.role === 'user' ? 'You' : 'AI'}</span><div><p>{message.content}</p>{message.responseTime != null && <small>Response time: {message.responseTime.toFixed(2)}s</small>}</div></article>)}
+        {messages.map((message, index) => <article key={index} className={`message ${message.role}`}><span className="avatar">{message.role === 'user' ? 'You' : 'AI'}</span>{message.role === 'assistant' ? <div className="message-content"><ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>{message.responseTime != null && <small>Response time: {message.responseTime.toFixed(2)}s</small>}</div> : <div><p>{message.content}</p></div>}</article>)}
         {isLoading && <article className="message assistant"><span className="avatar">AI</span><p className="thinking"><i /><i /><i /> Searching papers…</p></article>}
       </div>
       {error && <p className="error" role="alert">{error}</p>}
