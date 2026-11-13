@@ -30,16 +30,23 @@ def ensure_index_files():
     if not missing_files:
         return
 
-    repo_id = os.getenv("HF_REPO_ID")
+    # Cloud Run environment values and Secret Manager payloads are used
+    # literally; trim accidental whitespace/newlines before building the HF URL.
+    repo_id = (os.getenv("HF_REPO_ID") or "").strip()
     if not repo_id:
         missing_names = ", ".join(path.name for path in missing_files)
         raise FileNotFoundError(
             f"Missing RAG index file(s): {missing_names}. Build the index locally "
             "or set HF_REPO_ID to a Hugging Face dataset repository."
         )
+    if any(character.isspace() for character in repo_id):
+        raise ValueError(
+            "HF_REPO_ID must be a Hugging Face repo ID such as "
+            "'Vaib9/geoai-rag-index', without spaces or line breaks."
+        )
 
-    token = os.getenv("HF_TOKEN") or None
-    revision = os.getenv("HF_REVISION") or None
+    token = (os.getenv("HF_TOKEN") or "").strip() or None
+    revision = (os.getenv("HF_REVISION") or "").strip() or None
     for local_path in missing_files:
         print(f"Downloading {local_path.name} from Hugging Face dataset {repo_id}...")
         hf_hub_download(
