@@ -37,7 +37,7 @@ class RAGBase:
             llm_client,
             instructions = INSTRUCTIONS,
             prompt_template = PROMPT_TEMPLATE,
-            model = "llama-3.3-70b-versatile",
+            model = "openai/gpt-oss-120b",
     ):
         self.index = index
         self.llm_client = llm_client

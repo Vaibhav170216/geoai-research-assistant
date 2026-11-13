@@ -21,10 +21,10 @@ class LLMCallRecord:
 
 def calculate_cost(model, usage):
     cost = 0
-    if "llama-3.3-70b-versatile" in model:
-        cost = (usage.prompt_tokens * 0.59 + usage.completion_tokens * 0.79) / 1_000_000
-    elif "llama-3.1-8b-instant" in model:
-        cost = (usage.prompt_tokens * 0.05 + usage.completion_tokens * 0.08) / 1_000_000
+    if "openai/gpt-oss-120b" in model:
+        cost = (usage.prompt_tokens * 0.15 + usage.completion_tokens * 0.60) / 1_000_000
+    elif "openai/gpt-oss-20b" in model:
+        cost = (usage.prompt_tokens * 0.075 + usage.completion_tokens * 0.30) / 1_000_000
     return cost
 
 
