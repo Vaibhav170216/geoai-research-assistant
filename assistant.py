@@ -79,8 +79,12 @@ def load_assistant():
 
     encoder = SentenceTransformer("all-MiniLM-L6-v2")
 
+    groq_api_key = (os.getenv("GROQ_API_KEY") or "").strip()
+    if not groq_api_key:
+        raise ValueError("GROQ_API_KEY is missing or empty.")
+
     client = OpenAI(
-        api_key=os.getenv("GROQ_API_KEY"),
+        api_key=groq_api_key,
         base_url="https://api.groq.com/openai/v1"
     )
     return RAGWithMetrics(
