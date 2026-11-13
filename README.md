@@ -1,6 +1,6 @@
 # 🌍 GeoAI Research Assistant
 
-**🚀 [Live App](https://geoai-research-assistant.onrender.com/)**
+**🚀 [Live App](https://geoai-assistant-146613329373.asia-south2.run.app/)**
 
 
 <p align="center">
@@ -89,7 +89,7 @@ The system combines traditional information retrieval with semantic search and L
                ▼
       Context Construction
                ▼
-      Llama 3.3 70B (Groq)
+      GPT-OSS 120B (Groq)
                ▼
         Generated Response
                │
@@ -126,7 +126,7 @@ What are recent trends in Change Detection?
 ## LLM
 
 - Groq API
-- Llama-3.3-70B-versatile for the final grounded answers
+- GPT-OSS 120B (`openai/gpt-oss-120b`) for final grounded answers
 - all-MiniLM-L6-v2 for vector search embeddings
 
 ## Retrieval
@@ -151,7 +151,7 @@ What are recent trends in Change Detection?
 ## Evaluation
 
 - Ragas
-- Llama-3.1-8B-instant (LLM Judge)
+- GPT-OSS 20B (`openai/gpt-oss-20b`) as the LLM judge
 
 ---
 
